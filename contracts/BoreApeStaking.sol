@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract nftStaking is Ownable{ 
+contract BoreApeStaking is Ownable{ 
   uint256 constant SECONDS_PER_YEAR = 31536000;
     struct stakeID{
         uint256 stakedAmount;
