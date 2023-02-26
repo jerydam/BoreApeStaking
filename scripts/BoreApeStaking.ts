@@ -3,8 +3,8 @@ import { time } from "@nomicfoundation/hardhat-network-helpers";
 import hre from "hardhat";
 
 async function main() {
-  const USDT = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
-  const USDTHolder = "0x748dE14197922c4Ae258c7939C7739f3ff1db573";
+  const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+  const BoredApeHolder = "0x4A385286592C97e457A6f54A3734557F4b095A28";
   const [owner, holder1, holder2, holder3] = await ethers.getSigners();
   const Token = await ethers.getContractFactory("Token");
   const token = await Token.deploy("TrueCoin", "TRC");
@@ -22,34 +22,34 @@ async function main() {
   console.log(`Staking contract deployed to ${staking.address}`);
 
   // connect usdt
-   const usdt = await ethers.getContractAt("IUSDT", USDT);
+   const usdc = await ethers.getContractAt("IUSDT", USDC);
 
-   const usdtAdress = usdt.address;
-  console.log(`staking Token deployed to ${usdtAdress}`);
+   const usdcAdress = usdc.address;
+  console.log(`staking Token deployed to ${usdcAdress}`);
 
-  const balance = await usdt.balanceOf(USDTHolder);
+  const balance = await usdc.balanceOf(BoredApeHolder);
    console.log(`balnce is ${balance}`);
 
   const helpers = require("@nomicfoundation/hardhat-network-helpers");
 
-  const address = USDTHolder;
+  const address = BoredApeHolder;
   await helpers.impersonateAccount(address);
   const impersonatedSigner = await ethers.getSigner(address);
-
-  const tokenSet = await staking.setStakeToken(usdtAdress);
+  await helpers.setBalance(address, 9000000000000000000);
+  const tokenSet = await staking.setStakeToken(usdcAdress);
   //   console.log(await tokenSet.wait());
   console.log(`staked Token  ${await staking.stakeToken()}`);
 
-  await usdt.connect(impersonatedSigner).approve(staking.address, 5000000);
+  await usdc.connect(impersonatedSigner).approve(staking.address, 5000000);
 
-  const allowance = await usdt.allowance(USDTHolder, staking.address);
+  const allowance = await usdc.allowance(BoredApeHolder, staking.address);
   console.log(`allowance ${allowance.wait()}`);
 
   const staker1 = await staking.connect(impersonatedSigner).stake(50);
   const userInfo1 = await staking.userInfo(impersonatedSigner.address);
   console.log(`holder1 infornation ${userInfo1}`);
 
-  await ethers.provider.send("evm_mine", [1676505599]);
+  await ethers.provider.send("evm_mine", [1709251199]);
 
   await staking.connect(impersonatedSigner).updateReward();
 

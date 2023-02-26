@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BoreApeStaking is Ownable{ 
   uint256 constant SECONDS_PER_YEAR = 31536000;
+  uint256 secPerDay = 288000;
     struct User{
         uint256 stakedAmount;
         uint256 startTime;
@@ -65,9 +66,11 @@ contract BoreApeStaking is Ownable{
         uint256 _amount = _user.stakedAmount;
         uint256 _startTime = _user.startTime;
         uint256 duration = block.timestamp - _startTime;
-
-        _reward = (duration * 20 * _amount) / (SECONDS_PER_YEAR * 100);
-    }
+            if (duration == secPerDay){
+                 _reward = (duration * 20 * _amount) / (SECONDS_PER_YEAR * 100);
+                _amount += _reward;
+            }
+        }
 
     function claimReward(uint256 amount) public {
         User storage _user = user[msg.sender];
